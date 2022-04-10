@@ -1,5 +1,6 @@
 package io.arhturpbelato.service.model;
 
+import io.arhturpbelato.service.model.enums.EnumFilter;
 import io.arhturpbelato.service.model.enums.PythagoreanTheoremFieldsEnum;
 import io.arhturpbelato.service.util.ReflectUtils;
 import lombok.Getter;
@@ -34,9 +35,11 @@ public class PythagoreanTheorem {
     }
 
     private static void solveNullField(PythagoreanTheorem dto, Field field)
-            throws IllegalAccessException, InvocationTargetException {
+            throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+        EnumFilter<PythagoreanTheoremFieldsEnum> filter =
+                new EnumFilter<>(PythagoreanTheoremFieldsEnum.class, field.getName());
         Method setter = ReflectUtils.getSetter(dto, field);
-        PythagoreanTheoremFieldsEnum nullField = PythagoreanTheoremFieldsEnum.getField(field.getName());
+        PythagoreanTheoremFieldsEnum nullField = filter.getField();
         setter.invoke(dto, nullField.calculate(dto));
     }
 }
