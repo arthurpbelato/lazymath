@@ -1,45 +1,23 @@
 package io.arhturpbelato.service.model;
 
-import io.arhturpbelato.service.model.enums.EnumFilter;
-import io.arhturpbelato.service.model.enums.PythagoreanTheoremFieldsEnum;
-import io.arhturpbelato.service.util.ReflectUtils;
+import java.io.Serializable;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Objects;
-
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Slf4j
-public class PythagoreanTheorem {
+public class PythagoreanTheorem implements Serializable {
+
     private Double a;
     private Double b;
     private Double c;
-
-    public void solve() {
-        List<Field> fields = ReflectUtils.getFields(this);
-        fields.forEach(field -> {
-            try {
-                if (Objects.isNull(field.get(this))) {
-                    solveNullField(this, field);
-                }
-            } catch (Exception e) {
-                log.error(e.getMessage());
-            }
-        });
-    }
-
-    private static void solveNullField(PythagoreanTheorem dto, Field field)
-            throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-        EnumFilter<PythagoreanTheoremFieldsEnum> filter =
-                new EnumFilter<>(PythagoreanTheoremFieldsEnum.class, field.getName());
-        Method setter = ReflectUtils.getSetter(dto, field);
-        PythagoreanTheoremFieldsEnum nullField = filter.getField();
-        setter.invoke(dto, nullField.calculate(dto));
-    }
 }
